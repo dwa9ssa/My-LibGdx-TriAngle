@@ -2,10 +2,13 @@ package com.me.mygdxgame;
 
 import com.badlogic.gdx.ApplicationListener;
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.files.FileHandle;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL10;
 import com.badlogic.gdx.graphics.Mesh;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.PerspectiveCamera;
+import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.VertexAttribute;
 import com.badlogic.gdx.graphics.VertexAttributes.Usage;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
@@ -15,23 +18,38 @@ import com.badlogic.gdx.math.Vector2;
 
 public class TestLibGdx implements ApplicationListener {
 
-	private Mesh triangleMesh; // , squareMesh;
+	private Mesh triangleMesh; 
+	private Mesh squareMesh;
 	// private OrthographicCamera camera;
+//	private Texture texture;
+	private Texture texture2;
 
-	private float x = 0;
-	private float y = 0;
-	private float x1 = -0.25f;
-	private float y1 = -0.25f;
-	private float x2 = 0.25f;
-	private float y2 = -0.25f;
-	private float x3 = 0f;
-	private float y3 = 0.25f;
-	private float coef = 1f;
-	// private float myccoefX = 1;
-	// private float myccoefY = 1;
 	private float w;
 	private float h;
-	private float coefSize = 1;
+	
+	private float tx = -0.5f;
+	private float ty = 0;
+	private float tx1 = -0.25f;
+	private float ty1 = -0.25f;
+	private float tx2 = 0.25f;
+	private float ty2 = -0.25f;
+	private float tx3 = 0f;
+	private float ty3 = 0.25f;
+	private float tcoef = 1f;
+	private float tcoefSize = 1;
+	
+	private float sx = 0.5f;
+	private float sy = 0;
+	private float sx1 = -0.25f;
+	private float sy1 = -0.25f;
+	private float sx2 = 0.25f;
+	private float sy2 = -0.25f;
+	private float sx3 = -0.25f;
+	private float sy3 = 0.25f;
+	private float sx4 = 0.25f;
+	private float sy4 = 0.25f;
+	private float scoef = 1f;
+	private float scoefSize = 1;
 
 	@Override
 	public void create() {
@@ -80,19 +98,48 @@ public class TestLibGdx implements ApplicationListener {
 	}
 
 	private boolean drawGLScene() {
-		triangleMesh = new Mesh(true, 3, 3, new VertexAttribute(Usage.Position,
-				3, "a_position"));
-		// squareMesh = new Mesh(true, 4, 4, new VertexAttribute(Usage.Position,
-		// 3, "b_position"));
+		squareMesh = new Mesh(true, 4, 4, 
+				new VertexAttribute(Usage.Position, 3, "b_position")
+//		,
+//				new VertexAttribute(Usage.ColorPacked, 4, "a_color")
+		);
+
+		squareMesh.setVertices(new float[] { 
+				(tcoefSize * sx1) + sx, (tcoefSize * sy1) + sy, scoef, //Color.toFloatBits(255, 0, 0, 255), //0, 1,// point BL
+				(tcoefSize * sx2) + sx, (tcoefSize * sy2) + sy, scoef, //Color.toFloatBits(0, 255, 0, 255), //1, 1,// point BR
+				(tcoefSize * sx3) + sx, (tcoefSize * sy3) + sy, scoef, //Color.toFloatBits(0, 0, 255, 255), //0, 0, // point TL
+				(tcoefSize * sx4) + sx, (tcoefSize * sy4) + sy, scoef, //Color.toFloatBits(255, 255, 255, 255), //1, 0 // point TR
+				});
+		
+		squareMesh.setIndices(new short[] { 0, 1, 2, 3 });
+
+//        FileHandle imageFileHandle = Gdx.files.internal("data/badlogic.jpg"); 
+//        texture = new Texture(imageFileHandle);
+//	    texture.bind();
+        
+		squareMesh.render(GL10.GL_TRIANGLE_STRIP, 0, 4);
+
+		triangleMesh = new Mesh(true, 3, 3, 
+				new VertexAttribute(Usage.Position, 3, "a_position"), 
+				new VertexAttribute(Usage.ColorPacked, 4, "a_color"),
+                new VertexAttribute(Usage.TextureCoordinates, 2, "a_texCoords"));
+
 		triangleMesh.setVertices(new float[] { //
-				(coefSize * x1) + x, (coefSize * y1) + y, coef,
-				(coefSize * x2) + x, (coefSize * y2) + y, coef,
-				(coefSize * x3) + x, (coefSize * y3) + y, coef });
+				(tcoefSize * tx1) + tx, (tcoefSize * ty1) + ty, tcoef, Color.toFloatBits(255, 0, 0, 255), 0, 1,
+				(tcoefSize * tx2) + tx, (tcoefSize * ty2) + ty, tcoef, Color.toFloatBits(0, 255, 0, 255), 1, 1,
+				(tcoefSize * tx3) + tx, (tcoefSize * ty3) + ty, tcoef, Color.toFloatBits(0, 0, 255, 255), 0.5f, 0 });
 
 		triangleMesh.setIndices(new short[] { 0, 1, 2 });
 
+        FileHandle imageFileHandle2 = Gdx.files.internal("data/badlogicc.jpg"); 
+        texture2 = new Texture(imageFileHandle2);
+	    texture2.bind();
+	    
 		triangleMesh.render(GL10.GL_TRIANGLES, 0, 3);
-		// squareMesh.render(GL10.GL_TRIANGLE_STRIP, 0, 4);
+
+	    Gdx.graphics.getGL10().glEnable(GL10.GL_TEXTURE_2D);
+	    texture2.bind();
+	    
 		return true;
 	}
 
@@ -124,8 +171,10 @@ public class TestLibGdx implements ApplicationListener {
 
 		@Override
 		public boolean pan(float arg0, float arg1, float arg2, float arg3) {
-			x = arg0 / (w / 2) - 1;
-			y = -(arg1 / (h / 2) - 1);
+			tx = arg0 / (w / 2) - 1;
+			ty = -(arg1 / (h / 2) - 1);
+			sx = -tx;
+			sy = -ty;
 			return false;
 		}
 
@@ -152,7 +201,8 @@ public class TestLibGdx implements ApplicationListener {
 
 		@Override
 		public boolean zoom(float arg0, float arg1) {
-			coefSize = (arg1 - arg0) / (w / 4);
+			tcoefSize = (arg1 - arg0) / (w / 4);
+			scoefSize = tcoefSize;
 			return false;
 		}
 

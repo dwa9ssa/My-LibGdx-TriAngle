@@ -14,11 +14,14 @@ public class MainActivity extends AndroidApplication {
 //        cfg.useGL20 = false;
 //        
 //        initialize(new MyGdxGame(), cfg);
-        
+        System.out.println("11");
         AndroidApplicationConfiguration cfg = new AndroidApplicationConfiguration();
+        System.out.println("12");
         cfg.useAccelerometer = false;
+        System.out.println("13");
         cfg.useCompass = false;
-          
-        initialize(new TestLibGdx(), cfg);
+        System.out.println("14");
+        initialize(new BarreBalle(), cfg);
+        System.out.println("15");
     }
 }
