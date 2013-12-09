@@ -4,61 +4,36 @@ import com.badlogic.gdx.ApplicationListener;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.GL10;
-import com.badlogic.gdx.graphics.Pixmap;
-import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.Texture.TextureWrap;
-import com.badlogic.gdx.graphics.g2d.Animation;
-import com.badlogic.gdx.graphics.g2d.BitmapFont;
-import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.input.GestureDetector;
 import com.badlogic.gdx.input.GestureDetector.GestureListener;
-import com.badlogic.gdx.math.Matrix4;
 import com.badlogic.gdx.math.Vector2;
-import com.badlogic.gdx.math.Vector3;
-import com.me.mygdxgame.TestLibGdx.MyGestureListener;
+import com.example.libgdx.game.CasseBrique;
+import com.example.libgdx.model.Balle;
+import com.example.libgdx.model.Barre;
+import com.example.libgdx.model.Image;
 
 public class BarreBalle implements ApplicationListener {
-
-	Pixmap pixelsBarre, pixelsBalle, pixelsGameOver; // , pixelsBalle4;
-	Texture textureBarre, textureBalle, textureGameOver; // , textureBalle4;
-
-	Texture background;
-
-	// TextureRegion[] balleFrames; // #5
-	// TextureRegion currentFrame; // #7
-
-	// private static final int FRAME_COLS = 2; // #1
-	// private static final int FRAME_ROWS = 2; // #2
-
+	// Image imageGameOver, imageBackground;
+	// Barre barre;
+	// Balle balle;
+	//
 	SpriteBatch spriteBatch; // #6
 
-	boolean isGameOver = false;
+	CasseBrique casseBrique;
 
-	float w; // = Gdx.graphics.getWidth();
-	float h; // = Gdx.graphics.getHeight();
+	//
+	// boolean isGameOver = false;
+	//
+	// float w;
+	// float h;
+	//
+	// float marge = 200;
+	//
+	// boolean gameOverFirstUse = false;
+	// Sound soundGameOver;
+	// Sound soundClash;
 
-	float xBarre = 0;
-	float yBarre = 0;
-
-	float xBalle = 0;
-	float yBalle = 0;
-
-	float xBalleCoefDeplacement = 15;
-	float yBalleCoefDeplacement = 15;
-
-	float marge = 200;
-
-	boolean gameOverFirstUse = false;
-	Sound soundGameOver;
-	Sound soundClash;
-//    CharSequence str = "Hello World!";
-//	BitmapFont font;
-
-//	SpriteBatch spriteFont;
-//	Matrix4 mx4Font;
-	
 	@Override
 	public void create() {
 
@@ -67,49 +42,27 @@ public class BarreBalle implements ApplicationListener {
 
 		spriteBatch = new SpriteBatch(); // #12
 
-		soundClash = Gdx.audio.newSound(Gdx.files.internal("data/clash.mp3"));
-		soundGameOver = Gdx.audio.newSound(Gdx.files.internal("data/gameover.mp3"));
+//		soundClash = Gdx.audio.newSound(Gdx.files.internal("data/clash.mp3"));
+//		soundGameOver = Gdx.audio.newSound(Gdx.files.internal("data/gameover.mp3"));
+//
+//		imageBackground = new Image("data/back.png");
+//		barre = new Barre("data/barre.png");
+//		balle = new Balle("data/balle.png");
+//		imageGameOver = new Image("data/gameover.png");
+//
+//		spriteBatch = new SpriteBatch();
+//
+//		w = Gdx.graphics.getWidth();
+//		h = Gdx.graphics.getHeight();
+//
+//		System.out.println(w + " " + h);
+//		System.out.println("balle.getHeight() = " + balle.getHeight() + "; balle.getWidth() = " + balle.getWidth());
+//		System.out.println("barre.getHeight() = " + barre.getHeight() + "; barre.getWidth() = " + barre.getWidth());
+//		System.out.println(" (balle.getHeight() / 2) = " + (balle.getHeight() / 2));
+//		barre.setX(w - barre.getWidth() - marge);
 		
-		background = new Texture("data/back.png");
-//		background.setWrap(TextureWrap.Repeat, TextureWrap.Repeat);
 
-		pixelsBarre = new Pixmap(Gdx.files.internal("data/barre.png"));
-		textureBarre = new Texture(pixelsBarre);
-
-		pixelsBalle = new Pixmap(Gdx.files.internal("data/balle.png"));
-		textureBalle = new Texture(pixelsBalle);
-
-		pixelsGameOver = new Pixmap(Gdx.files.internal("data/gameover.png"));
-		textureGameOver = new Texture(pixelsGameOver);
-		
-	    spriteBatch = new SpriteBatch();
-	    
-//	    spriteFont = new SpriteBatch();
-//	    font = new BitmapFont();
-//	    mx4Font = new Matrix4();
-
-		// pixelsBalle4 = new Pixmap(Gdx.files.internal("data/balleAnnim.png"));
-		// textureBalle4 = new Texture(pixelsBalle4);
-		//
-		// TextureRegion[][] tmp = TextureRegion.split(textureBalle4,
-		// textureBalle4.getWidth() / FRAME_COLS, textureBalle4.getHeight()
-		// / FRAME_ROWS); // #10
-		//
-		// balleFrames = new TextureRegion[FRAME_COLS * FRAME_ROWS];
-		// int index = 0;
-		// for (int i = 0; i < FRAME_ROWS; i++) {
-		// for (int j = 0; j < FRAME_COLS; j++) {
-		// balleFrames[index++] = tmp[i][j];
-		// }
-		// }
-
-		w = Gdx.graphics.getWidth();
-		h = Gdx.graphics.getHeight();
-
-		System.out.println(w + " " + h);
-
-		xBarre = w - 8 - marge;
-
+		casseBrique = new CasseBrique(new Balle("data/balle.png"), new Barre("data/barre.png"), new Image("data/gameover.png"), new Image("data/back.png"), Gdx.audio.newSound(Gdx.files.internal("data/gameover.mp3")), Gdx.audio.newSound(Gdx.files.internal("data/clash.mp3")), Gdx.graphics.getWidth(), Gdx.graphics.getHeight(), 200, false, false);
 	}
 
 	@Override
@@ -124,74 +77,57 @@ public class BarreBalle implements ApplicationListener {
 
 	}
 
-	float stateTime;
-	int tilesW, tilesH;
-
 	@Override
 	public void render() {
-		Gdx.gl.glClear(GL10.GL_COLOR_BUFFER_BIT | GL10.GL_DEPTH_BUFFER_BIT); // #14
-		// TODO Auto-generated method stub
-
-		// System.out.println(yBalle + " " + yBarre);
+		Gdx.gl.glClear(GL10.GL_COLOR_BUFFER_BIT | GL10.GL_DEPTH_BUFFER_BIT);
 
 		spriteBatch.begin();
-		spriteBatch.draw(background, 0, 0);
+		spriteBatch.draw(casseBrique.getImageBackground().getTexture(), 0, 0);
 
-		spriteBatch.draw(background, 0, 0, background.getWidth() * tilesW,
-				background.getHeight() * tilesH, 0, tilesH, tilesW, 0);
-		
-		if (isGameOver
-				|| ((w - (64 + marge) < xBalle) && !(yBalle - 32 <= (yBarre + 64) && (yBarre - 64) <= yBalle - 32))) {
-			isGameOver = true;
-			spriteBatch.draw(textureGameOver, 0, 0); // #17
-		} 
-//		else {
+		if (casseBrique.isGameOver()
+				|| ((casseBrique.getW() - (casseBrique.getBalle().getWidth() + casseBrique.getMarge()) < casseBrique.getBalle().getX()) && !(casseBrique.getBalle()
+						.getY() - (casseBrique.getBalle().getHeight() / 2) <= (casseBrique.getBarre().getY() + casseBrique.getBalle()
+						.getHeight()) && (casseBrique.getBarre().getY() - casseBrique.getBalle().getHeight()) <= casseBrique.getBalle()
+						.getY() - (casseBrique.getBalle().getHeight() / 2)))) {
+			casseBrique.setGameOver(true);
+			spriteBatch.draw(casseBrique.getImageBackground().getTexture(), 0, 0); // #17
+		}
 
-			if ((w - (64 + marge) < xBalle) || xBalle < 0) {
-				xBalleCoefDeplacement = -1 * xBalleCoefDeplacement;
-				if (!isGameOver) {soundClash.play();}
-				else if (!gameOverFirstUse) {soundGameOver.play(); gameOverFirstUse = true;}
-//				if ((w - (64 + marge)) < xBalle) {
-//					System.out.println(yBalle + " " + (yBarre + 64) + " " + (yBarre - 64));
-//				}
+		if ((casseBrique.getW() - (casseBrique.getBalle().getWidth() + casseBrique.getMarge()) < casseBrique.getBalle().getX()) || casseBrique.getBalle().getX() < 0) {
+			casseBrique.getBalle().setxBalleCoefDeplacement(-1
+					* casseBrique.getBalle().getxBalleCoefDeplacement());
+			if (!casseBrique.isGameOver()) {
+				casseBrique.getSoundClash().play();
+			} else if (!casseBrique.isGameOverFirstUse()) {
+				casseBrique.getSoundGameOver().play();
+				casseBrique.setGameOverFirstUse(true);
 			}
+		}
 
-			if (h - 64 < yBalle || yBalle < 0) {
-				yBalleCoefDeplacement = -1 * yBalleCoefDeplacement;
-				if (!isGameOver) {soundClash.play();}
-				else if (!gameOverFirstUse) {soundGameOver.play(); gameOverFirstUse = true;}
+		if (casseBrique.getH() - casseBrique.getBalle().getHeight() < casseBrique.getBalle().getY() || casseBrique.getBalle().getY() < 0) {
+			casseBrique.getBalle().setyBalleCoefDeplacement(-1
+					* casseBrique.getBalle().getyBalleCoefDeplacement());
+			if (!casseBrique.isGameOver()) {
+				casseBrique.getSoundClash().play();
+			} else if (!casseBrique.isGameOverFirstUse()) {
+				casseBrique.getSoundGameOver().play();
+				casseBrique.setGameOverFirstUse(true);
 			}
-			
+		}
 
-			if (!isGameOver) {
-				xBalle += xBalleCoefDeplacement;
-				yBalle += yBalleCoefDeplacement;
-			}
+		if (!casseBrique.isGameOver()) {
+			casseBrique.getBalle().setX(casseBrique.getBalle().getX() + casseBrique.getBalle().getxBalleCoefDeplacement());
+			casseBrique.getBalle().setY(casseBrique.getBalle().getY() + casseBrique.getBalle().getyBalleCoefDeplacement());
+		}
 
-			spriteBatch.draw(textureBarre, xBarre, yBarre); // #17
-			spriteBatch.draw(textureBalle, xBalle, yBalle); // #17
+		spriteBatch.draw(casseBrique.getBarre().getTexture(), casseBrique.getBarre().getX(), casseBrique.getBarre().getY()); // #17
+		spriteBatch.draw(casseBrique.getBalle().getTexture(), casseBrique.getBalle().getX(), casseBrique.getBalle().getY()); // #17
 
-			// stateTime += Gdx.graphics.getDeltaTime();
-			// currentFrame = balleAnimation.getKeyFrame(6.4F, true); // #16
-			// currentFrame = balleFrames[1];
-			// spriteBatch.draw(currentFrame, 0, 0); // #17
-//		}
-
-//		font.draw(spriteBatch, str, 10, 10);
 		spriteBatch.end();
-		
-//		mx4Font.setToRotation(new Vector3(200, 200, 0), 180);
-//		spriteFont.setTransformMatrix(mx4Font);
-//		spriteFont.begin();
-////		font.setColor(1.0f, 1.0f, 1.0f, 1.0f);
-//		font.draw(spriteFont, "The quick brown fox jumped over the lazy dog", 10, 10);
-//		spriteFont.end();
 	}
 
 	@Override
 	public void resize(int width, int height) {
-		tilesW = width / background.getWidth() + 1;
-		tilesH = height / background.getHeight() + 1;
 	}
 
 	@Override
@@ -214,11 +150,10 @@ public class BarreBalle implements ApplicationListener {
 
 		@Override
 		public boolean pan(float arg0, float arg1, float arg2, float arg3) {
-			// x = arg0 / (w / 2) - 1;
-			if (!isGameOver)
-			yBarre = h - arg1 - 64;// -(arg1 / (h / 2) - 1);
-			// sx = -tx;
-			// sy = -ty;
+			if (!casseBrique.isGameOver()) {
+				casseBrique.getBarre().move(casseBrique.getH() - arg1);
+			}
+
 			return false;
 		}
 
