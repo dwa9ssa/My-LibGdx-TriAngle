@@ -59,4 +59,17 @@ public class Image {
 		return pixels.getWidth();
 	}
 	
+	public boolean isCollision(Image image) {
+		if ((this.getX() >= image.getX() && this.getX() <= image.getX() + image.getWidth()) && (this.getY() >= image.getY() && this.getY() <= image.getY() + image.getHeight()))
+			return true;
+		
+		if ((image.getX() >= this.getX() && image.getX() <= this.getX() + this.getWidth()) && (image.getY() >= this.getY() && image.getY() <= this.getY() + this.getHeight()))
+			return true;
+		
+		return false;
+	}
+	
+	public String toString () {
+		return "X = " + this.getX() + "; Y = " + this.getY() + "; Height = " + this.getHeight() + "; Width = " + this.getWidth() + ";";
+	}
 }
