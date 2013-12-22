@@ -1,8 +1,5 @@
 package com.me.mygdxgame;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import com.badlogic.gdx.ApplicationListener;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.audio.Sound;
@@ -14,7 +11,6 @@ import com.badlogic.gdx.math.Vector2;
 import com.example.libgdx.game.CasseBrique;
 import com.example.libgdx.model.Balle;
 import com.example.libgdx.model.Barre;
-import com.example.libgdx.model.Brique;
 import com.example.libgdx.model.Image;
 
 public class BarreBalle implements ApplicationListener {
@@ -29,30 +25,9 @@ public class BarreBalle implements ApplicationListener {
 				.setInputProcessor(new GestureDetector(new MyGestureListener()));
 
 		spriteBatch = new SpriteBatch(); // #12
+		
+		casseBrique = new CasseBrique(Gdx.audio.newSound(Gdx.files.internal("data/gameover.mp3")), Gdx.audio.newSound(Gdx.files.internal("data/clash.mp3")), Gdx.graphics.getWidth(), Gdx.graphics.getHeight(), 200, false, false);
 
-		
-		
-		casseBrique = new CasseBrique(new Balle("data/balle.png"), new Barre("data/barre.png"), new Image("data/gameover.png"), new Image("data/back.png"), null, Gdx.audio.newSound(Gdx.files.internal("data/gameover.mp3")), Gdx.audio.newSound(Gdx.files.internal("data/clash.mp3")), Gdx.graphics.getWidth(), Gdx.graphics.getHeight(), 200, false, false);
-
-		casseBrique.getBalle().setX(casseBrique.getBarre().getX() - casseBrique.getBalle().getHeight());
-//		casseBrique.getBalle().setY(casseBrique.getBalle().getY());
-
-		Brique brique = new Brique("data/brique.png");
-//		brique.setX(casseBrique.getW() - brique.getWidth());
-		brique.setY(casseBrique.getH() - brique.getHeight());
-		
-		Brique brique1 = new Brique("data/brique.png");
-//		brique1.setX(casseBrique.getW() - brique.getWidth());
-		brique1.setY((casseBrique.getH() / 2) - brique1.getHeight());
-		
-		List<Brique> listBrique = new ArrayList<Brique>();
-		
-		listBrique.add(new Brique("data/brique.png"));
-
-		listBrique.add(brique);
-		listBrique.add(brique1);
-		
-		casseBrique.setListImageBrique(listBrique);
 	}
 
 	@Override

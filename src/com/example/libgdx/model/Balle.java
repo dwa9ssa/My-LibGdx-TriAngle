@@ -1,9 +1,11 @@
 package com.example.libgdx.model;
 
+import com.badlogic.gdx.graphics.Texture;
+
 public class Balle extends Image {
 
-	private float xBalleCoefDeplacement = 15;
-	private float yBalleCoefDeplacement = 15;
+	private float xBalleCoefDeplacement = 8;
+	private float yBalleCoefDeplacement = 8;
 	
 	
 	
@@ -23,8 +25,8 @@ public class Balle extends Image {
 		this.yBalleCoefDeplacement = yBalleCoefDeplacement;
 	}
 
-	public Balle(String imagePath) {
-		super(imagePath);
+	public Balle(Texture texture) {
+		super(texture);
 	}
 
 	public void move(float position) {
