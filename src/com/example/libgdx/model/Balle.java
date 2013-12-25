@@ -4,8 +4,8 @@ import com.badlogic.gdx.graphics.Texture;
 
 public class Balle extends Image {
 
-	private float xBalleCoefDeplacement = 8;
-	private float yBalleCoefDeplacement = 8;
+	private float xBalleCoefDeplacement;
+	private float yBalleCoefDeplacement;
 	
 	
 	

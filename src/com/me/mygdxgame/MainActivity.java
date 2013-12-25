@@ -1,5 +1,6 @@
 package com.me.mygdxgame;
 
+import android.content.pm.ActivityInfo;
 import android.os.Bundle;
 
 import com.badlogic.gdx.backends.android.AndroidApplication;
@@ -14,14 +15,14 @@ public class MainActivity extends AndroidApplication {
 //        cfg.useGL20 = false;
 //        
 //        initialize(new MyGdxGame(), cfg);
-        System.out.println("11");
+        
+        setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
+        
         AndroidApplicationConfiguration cfg = new AndroidApplicationConfiguration();
-        System.out.println("12");
+        
         cfg.useAccelerometer = false;
-        System.out.println("13");
         cfg.useCompass = false;
-        System.out.println("14");
+        
         initialize(new BarreBalle(), cfg);
-        System.out.println("15");
     }
 }

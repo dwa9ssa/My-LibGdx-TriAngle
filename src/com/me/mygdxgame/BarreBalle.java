@@ -26,8 +26,7 @@ public class BarreBalle implements ApplicationListener {
 
 		spriteBatch = new SpriteBatch(); // #12
 		
-		casseBrique = new CasseBrique(Gdx.audio.newSound(Gdx.files.internal("data/gameover.mp3")), Gdx.audio.newSound(Gdx.files.internal("data/clash.mp3")), Gdx.graphics.getWidth(), Gdx.graphics.getHeight(), 200, false, false);
-
+		casseBrique = new CasseBrique(Gdx.audio.newSound(Gdx.files.internal("data/gameover.mp3")), Gdx.audio.newSound(Gdx.files.internal("data/clash.mp3")), Gdx.graphics.getWidth(), Gdx.graphics.getHeight(), 200, false);
 	}
 
 	@Override
@@ -57,6 +56,9 @@ public class BarreBalle implements ApplicationListener {
 		for (Image image : casseBrique.getListImage()) {
 			spriteBatch.draw(image.getTexture(), image.getX(), image.getY());
 		}
+
+		Gdx.input.getRotation();
+		
 
 		spriteBatch.end();
 	}
@@ -115,8 +117,6 @@ public class BarreBalle implements ApplicationListener {
 
 		@Override
 		public boolean zoom(float arg0, float arg1) {
-			// tcoefSize = (arg1 - arg0) / (w / 4);
-			// scoefSize = tcoefSize;
 			return false;
 		}
 

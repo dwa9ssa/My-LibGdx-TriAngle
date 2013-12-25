@@ -36,30 +36,32 @@ public class CasseBrique {
 
 	private float marge = 200;
 
-	private boolean gameOverFirstUse = false;
+	private boolean gameOverFirstUse = true;
 	private boolean isGameOver = false;
 
 	private int margeBrique = 10;
 	private int nbrCols;
 	private int nbrBrique = 90;
+	
+	private float xBalleCoefDeplacementTemp = 5;
+	private float yBalleCoefDeplacementTemp = 5;
 
 	public CasseBrique(Sound soundGameOver, Sound soundClash,
-			float w, float h, float marge, boolean gameOverFirstUse,
+			float w, float h, float marge,
 			boolean isGameOver) {
 		this.soundGameOver = soundGameOver;
 		this.soundClash = soundClash;
 		this.w = w;
 		this.h = h;
 		this.marge = marge;
-		this.gameOverFirstUse = gameOverFirstUse;
 		this.isGameOver = isGameOver;
 
 		barre.setX(w - barre.getWidth() - marge);
 		
 		this.getBalle().setX(this.getBarre().getX() - 2 * this.getBalle().getHeight());
-//		this.getBalle().setY(this.getBalle().getY());
 
-		
+		this.getBalle().setxBalleCoefDeplacement(xBalleCoefDeplacementTemp);
+		this.getBalle().setyBalleCoefDeplacement(yBalleCoefDeplacementTemp);
 		
 		nbrCols = (int) h / (briqueTexture.getHeight() + margeBrique);
 		
@@ -80,87 +82,37 @@ public class CasseBrique {
 			reinitY = 1;
 			listImageBrique.add(brique);
 		}
-		
-		
-//		Brique brique = new Brique("data/brique.png");
-////		brique.setX(this.getW() - brique.getWidth());
-//		brique.setY(this.getH() - brique.getHeight());
-//		
-//		Brique brique1 = new Brique("data/brique.png");
-////		brique1.setX(this.getW() - brique.getWidth());
-//		brique1.setY((this.getH() / 2) - brique1.getHeight());
-//		
-//		List<Brique> listBrique = new ArrayList<Brique>();
-//		
-//		listBrique.add(new Brique("data/brique.png"));
-//
-//		listBrique.add(brique);
-//		listBrique.add(brique1);
-//		
-//		this.setListImageBrique(listBrique);
+
+		this.getImageBackground().setX(0);
+		this.getImageBackground().setY(0);
 	}
 
 	public boolean isBalleFail() {
-		
-//		System.out.println("W : " + this.getW() + " H : " + this.getH()); 
-//		
-//		System.out.println("WB : " + this.getBalle().getWidth() + "    HB : " + this.getBalle().getHeight());
-//		
-//		System.out.println("WB : " + this.getBalle().getX() + "    HB : " + this.getBalle().getY());
-//		
-//		System.out.println("WR : " + this.getBarre().getWidth() + "    HR : " + this.getBarre().getHeight());
-//		
-//		System.out.println("WR : " + this.getBarre().getX() + "    HR : " + this.getBarre().getY());
-		
-		
-//		(this.getBalle().getWidth() + this.getMarge()) < this
-//				.getBalle().getX()) && !(this.getBalle().getY()
-//				- (this.getBalle().getHeight() / 2) <= (this.getBarre().getY() + this
-//				.getBalle().getHeight()) && (this.getBarre().getY() - this
-//				.getBalle().getHeight()) <= this.getBalle().getY()
-//				- (this.getBalle().getHeight() / 2))
-		
-
-				
-				if (this.getBalle().getX() >= this.getW()) {
-					return true;
-				}
-				 
-				return false;
-				
-
-//				return (
-//				
-////				
-//				(
-//						this.getW() - 
-//						(this.getBalle().getWidth() + this.getMarge()) 
-//						< 
-//						this.getBalle().getX()
-//				) 
-//				&& 
-//				this.getBalle().isCollision(this.getBarre())
-////				(
-////					this.getBalle().getY() - (this.getBalle().getHeight() / 2)
-////					<= 
-////					(this.getBarre().getY() + this.getBalle().getHeight()) 
-////					&& 
-////					(this.getBarre().getY() - this.getBalle().getHeight())
-////					<= 
-////					this.getBalle().getY() - (this.getBalle().getHeight() / 2)
-////				)
-//				
-//				);
+		if (this.getBalle().getX() + this.getBalle().getHeight() >= this.getW()) {
+			return true;
+		}
+		 
+		return false;
 	}
 
 	public boolean isTouchTheWallW() {
-		return ((this.getW() - (this.getBalle().getWidth() + this.getMarge()) < this
-				.getBalle().getX()) || this.getBalle().getX() < 0);
+		return ((this.getW() - (this.getBalle().getWidth()) < this.getBalle()
+				.getX()) || this.getBalle().getX() < 0);
 	}
 
 	public boolean isTouchTheWallH() {
 		return (this.getH() - this.getBalle().getHeight() < this.getBalle()
 				.getY() || this.getBalle().getY() < 0);
+	}
+	
+	public boolean isBalleHitBarre() {
+//		if (this.getW() - (this.getBalle().getWidth() + this.getMarge()) < this.getBalle().getX()) {
+			if (this.getBalle().isCollision(this.getBarre())) {
+				return true;
+			}
+//		}
+		
+		return false;
 	}
 
 	public void renderGame() {
@@ -168,12 +120,28 @@ public class CasseBrique {
 		listSound = new ArrayList<Sound>();
 		
 		listImage.add(this.getImageBackground());
-
-		this.getImageBackground().setX(0);
-		this.getImageBackground().setY(0);
 		
 		if (this.isGameOver() || this.isBalleFail()) {
 			this.setGameOver(true);
+		}
+		
+		if (this.isBalleHitBarre()) {
+			this.getBalle().setxBalleCoefDeplacement(-1
+					* this.getBalle().getxBalleCoefDeplacement());
+
+			System.out.println("Vitesse = " + this.getBarre().getVitesse());
+			System.out.println("befor yBalleCoefDeplacement = " + this.getBalle().getyBalleCoefDeplacement());
+			float vitesse = this.getBarre().getVitesse();
+			if (vitesse > this.getBalle().getyBalleCoefDeplacement() / 2) {
+				vitesse = yBalleCoefDeplacementTemp / 2;
+			}
+			this.getBalle().setyBalleCoefDeplacement(vitesse
+					+ yBalleCoefDeplacementTemp);
+			System.out.println("after yBalleCoefDeplacement = " + this.getBalle().getyBalleCoefDeplacement());
+			
+			if (!this.isGameOver()) {
+				listSound.add(this.getSoundClash());
+			}
 		}
 
 		if (this.isTouchTheWallW()) {
@@ -181,9 +149,6 @@ public class CasseBrique {
 					* this.getBalle().getxBalleCoefDeplacement());
 			if (!this.isGameOver()) {
 				listSound.add(this.getSoundClash());
-			} else if (!this.isGameOverFirstUse()) {
-				listSound.add(this.getSoundGameOver());
-				this.setGameOverFirstUse(true);
 			}
 		}
 
@@ -192,58 +157,45 @@ public class CasseBrique {
 					* this.getBalle().getyBalleCoefDeplacement());
 			if (!this.isGameOver()) {
 				listSound.add(this.getSoundClash());
-			} else if (!this.isGameOverFirstUse()) {
-				listSound.add(this.getSoundGameOver());
-				this.setGameOverFirstUse(true);
 			}
 		}
 
+		boolean isStillBalle = false;
+		boolean isHitBrique = false;
 		for (Brique brique : listImageBrique) {
-//			System.err.println("Balle : " + this.getBalle());
 			if (brique.isVisible()) {
+				isStillBalle = true;
 				boolean isCollision = balle.isCollision(brique);
 				if (isCollision) {
-					System.out.println("Collision");
 					this.getBalle().setxBalleCoefDeplacement(-1
 							* this.getBalle().getxBalleCoefDeplacement());
-//					this.getBalle().setyBalleCoefDeplacement(-1
-//							* this.getBalle().getyBalleCoefDeplacement());
 					brique.setVisible(false);
+					isHitBrique = true;
 				} else {
 					listImage.add(brique);
 				}
 			}
-////				System.err.println("Brique : " + image);
-//				listImage.add(brique);
-//			} else if (brique.isVisible() && isCollision) {
-////				System.err.println("Brique : " + image);
-////				listImage.add(brique);
-//				this.getBalle().setxBalleCoefDeplacement(-1
-//						* this.getBalle().getxBalleCoefDeplacement());
-//				this.getBalle().setyBalleCoefDeplacement(-1
-//						* this.getBalle().getyBalleCoefDeplacement());
-//			} else {
-//				brique.setVisible(false);
-//			}
+		}
+		
+		if (isHitBrique) {
+			listSound.add(this.getSoundClash());
+		}
+		
+		if (!isStillBalle) {
+			this.setGameOver(true);
 		}
 
 		listImage.add(this.getBarre()); // #17
 		listImage.add(this.getBalle()); // #17
 		
-		if (!this.isGameOver()) {
+		if (!this.isGameOver() && isStillBalle) {
 			this.getBalle().setX(this.getBalle().getX() + this.getBalle().getxBalleCoefDeplacement());
 			this.getBalle().setY(this.getBalle().getY() + this.getBalle().getyBalleCoefDeplacement());
-
-			
-//			for (Brique brique : listImageBrique) {
-////				System.err.println("Balle : " + this.getBalle());
-//				if (brique.isVisible() && !balle.isCollision(brique)) {
-////					System.err.println("Brique : " + image);
-//					listImage.add(brique);
-//				} else {
-//					brique.setVisible(false);
-//				}
-//			}
+		} else {
+			if (this.isGameOverFirstUse()) {
+				listSound.add(this.getSoundGameOver());
+				this.setGameOverFirstUse(false);
+			}
 		}
 	}
 
@@ -320,6 +272,18 @@ public class CasseBrique {
 	}
 
 	public float getMarge() {
+		return marge;
+	}
+
+	public float getEffectiveMarge() {
+		float diffCoefDep = this.getW() / this.getBalle().getxBalleCoefDeplacement();
+		float diffMarge = this.getW() / marge;
+		
+		float maxDiff = diffCoefDep;
+		if (maxDiff > diffMarge) {
+			maxDiff = diffMarge;
+		}
+		
 		return marge;
 	}
 
