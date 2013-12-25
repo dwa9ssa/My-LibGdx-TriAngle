@@ -45,14 +45,61 @@ public class Image {
 	}
 	
 	public boolean isCollision(Image image) {
-		if (
-			((this.getX() >= image.getX() && this.getX() <= image.getX() + image.getWidth()) 
-			&& (this.getY() >= image.getY() && this.getY() <= image.getY() + image.getHeight()))
-			|| 
-			((image.getX() >= this.getX() && image.getX() <= this.getX() + this.getWidth()) 
-			&& (image.getY() >= this.getY() && image.getY() <= this.getY() + this.getHeight()))
-			)
+		
+		return isCollisionUp(image) || isCollisionDown(image) || isCollisionLeft(image) || isCollisionRight(image);
+		
+//		if (
+//			((this.getX() >= image.getX() && this.getX() <= image.getX() + image.getWidth()) 
+//			&& (this.getY() >= image.getY() && this.getY() <= image.getY() + image.getHeight()))
+//			|| 
+//			((image.getX() >= this.getX() && image.getX() <= this.getX() + this.getWidth()) 
+//			&& (image.getY() >= this.getY() && image.getY() <= this.getY() + this.getHeight()))
+//			)
+//			return true;
+//		
+//		return false;
+	}
+	
+	public boolean isCollisionUp(Image image) {
+		if (((this.getY() >= image.getY() && this.getY() <= image.getY() + image.getHeight()) 
+			|| (image.getY() >= this.getY() && image.getY() <= this.getY() + this.getHeight())) 
+			&& ((this.getX() + this.getWidth() >= image.getX()) 
+				&& (this.getX() + this.getWidth() <= image.getX() + image.getWidth()))) {
 			return true;
+		}
+		
+		return false;
+	}
+	
+	public boolean isCollisionDown(Image image) {
+		if (((this.getY() >= image.getY() && this.getY() <= image.getY() + image.getHeight()) 
+			|| (image.getY() >= this.getY() && image.getY() <= this.getY() + this.getHeight())) 
+			&& ((image.getX() + image.getWidth() >= this.getX()) 
+				&& (image.getX() + image.getWidth() <= this.getX() + this.getWidth()))) {
+			return true;
+		}
+		
+		return false;
+	}
+	
+	public boolean isCollisionLeft(Image image) {
+		if (((this.getX() >= image.getX() && this.getX() <= image.getX() + image.getWidth()) 
+			|| (image.getX() >= this.getX() && image.getX() <= this.getX() + this.getWidth())) 
+			&& ((image.getY() + image.getHeight() >= this.getY()) 
+				&& (image.getY() + image.getHeight() <= this.getY() + this.getHeight()))) {
+			return true;
+		}
+		
+		return false;
+	}
+	
+	public boolean isCollisionRight(Image image) {
+		if (((this.getX() >= image.getX() && this.getX() <= image.getX() + image.getWidth()) 
+			|| (image.getX() >= this.getX() && image.getX() <= this.getX() + this.getWidth())) 
+			&& ((this.getY() + this.getHeight() >= image.getY()) 
+				&& (this.getY() + this.getHeight() <= image.getY() + image.getHeight()))) {
+			return true;
+		}
 		
 		return false;
 	}

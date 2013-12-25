@@ -39,12 +39,13 @@ public class CasseBrique {
 	private boolean gameOverFirstUse = true;
 	private boolean isGameOver = false;
 
-	private int margeBrique = 10;
+	private int margeBrique = 5 ;
 	private int nbrCols;
 	private int nbrBrique = 90;
 	
-	private float xBalleCoefDeplacementTemp = 5;
-	private float yBalleCoefDeplacementTemp = 5;
+	private float initialSpeed = 10;
+	private float xBalleCoefDeplacementTemp = initialSpeed;
+	private float yBalleCoefDeplacementTemp = initialSpeed;
 
 	public CasseBrique(Sound soundGameOver, Sound soundClash,
 			float w, float h, float marge,
@@ -66,20 +67,17 @@ public class CasseBrique {
 		nbrCols = (int) h / (briqueTexture.getHeight() + margeBrique);
 		
 		int currentCols = 0;
-		int reinitY = 1;
 		
 		for (int i = 0; i < nbrBrique; i++) {
 			
 			if ((i % nbrCols) == 0) {
 				currentCols++;
-				reinitY = 0;
 			}
 			
 			Brique brique = new Brique(briqueTexture);
 			brique.setY(margeBrique + ((i % nbrCols) * (brique.getHeight() + margeBrique)));
 			brique.setX(currentCols * (brique.getHeight() + margeBrique));
 
-			reinitY = 1;
 			listImageBrique.add(brique);
 		}
 
@@ -94,18 +92,14 @@ public class CasseBrique {
 		 
 		return false;
 	}
-
-	public boolean isTouchTheWallW() {
-		return ((this.getW() - (this.getBalle().getWidth()) < this.getBalle()
-				.getX()) || this.getBalle().getX() < 0);
-	}
-
-	public boolean isTouchTheWallH() {
-		return (this.getH() - this.getBalle().getHeight() < this.getBalle()
-				.getY() || this.getBalle().getY() < 0);
-	}
 	
 	public boolean isBalleHitBarre() {
+
+//		System.out.println("Up " + this.getBalle().isCollisionUp(this.getBarre()));
+//		System.out.println("Down " + this.getBalle().isCollisionDown(this.getBarre()));
+//		System.out.println("Left " + this.getBalle().isCollisionLeft(this.getBarre()));
+//		System.out.println("Right " + this.getBalle().isCollisionRight(this.getBarre()));
+		
 //		if (this.getW() - (this.getBalle().getWidth() + this.getMarge()) < this.getBalle().getX()) {
 			if (this.getBalle().isCollision(this.getBarre())) {
 				return true;
@@ -125,26 +119,13 @@ public class CasseBrique {
 			this.setGameOver(true);
 		}
 		
-		if (this.isBalleHitBarre()) {
-			this.getBalle().setxBalleCoefDeplacement(-1
-					* this.getBalle().getxBalleCoefDeplacement());
-
-			System.out.println("Vitesse = " + this.getBarre().getVitesse());
-			System.out.println("befor yBalleCoefDeplacement = " + this.getBalle().getyBalleCoefDeplacement());
-			float vitesse = this.getBarre().getVitesse();
-			if (vitesse > this.getBalle().getyBalleCoefDeplacement() / 2) {
-				vitesse = yBalleCoefDeplacementTemp / 2;
-			}
-			this.getBalle().setyBalleCoefDeplacement(vitesse
-					+ yBalleCoefDeplacementTemp);
-			System.out.println("after yBalleCoefDeplacement = " + this.getBalle().getyBalleCoefDeplacement());
+		boolean isBalleHitBarre = this.getBalle().isBalleHitBarre(this.getBarre(), xBalleCoefDeplacementTemp, yBalleCoefDeplacementTemp);
 			
-			if (!this.isGameOver()) {
-				listSound.add(this.getSoundClash());
-			}
+		if (!this.isGameOver() && isBalleHitBarre) {
+			listSound.add(this.getSoundClash());
 		}
-
-		if (this.isTouchTheWallW()) {
+		
+		if (this.getBalle().isTouchTheWallW(this.getW())) {
 			this.getBalle().setxBalleCoefDeplacement(-1
 					* this.getBalle().getxBalleCoefDeplacement());
 			if (!this.isGameOver()) {
@@ -152,7 +133,7 @@ public class CasseBrique {
 			}
 		}
 
-		if (this.isTouchTheWallH()) {
+		if (this.getBalle().isTouchTheWallH(this.getH())) {
 			this.getBalle().setyBalleCoefDeplacement(-1
 					* this.getBalle().getyBalleCoefDeplacement());
 			if (!this.isGameOver()) {
@@ -167,8 +148,6 @@ public class CasseBrique {
 				isStillBalle = true;
 				boolean isCollision = balle.isCollision(brique);
 				if (isCollision) {
-					this.getBalle().setxBalleCoefDeplacement(-1
-							* this.getBalle().getxBalleCoefDeplacement());
 					brique.setVisible(false);
 					isHitBrique = true;
 				} else {
@@ -177,7 +156,10 @@ public class CasseBrique {
 			}
 		}
 		
+		
 		if (isHitBrique) {
+			this.getBalle().setxBalleCoefDeplacement(-1
+					* this.getBalle().getxBalleCoefDeplacement());
 			listSound.add(this.getSoundClash());
 		}
 		
