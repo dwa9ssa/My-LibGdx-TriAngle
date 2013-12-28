@@ -1,6 +1,7 @@
 package com.me.mygdxgame;
 
 import android.content.pm.ActivityInfo;
+import android.content.res.Configuration;
 import android.os.Bundle;
 
 import com.badlogic.gdx.backends.android.AndroidApplication;
@@ -25,4 +26,12 @@ public class MainActivity extends AndroidApplication {
         
         initialize(new BarreBalle(), cfg);
     }
+	
+
+	@Override
+	public void onConfigurationChanged(Configuration newConfig)
+	{
+	    super.onConfigurationChanged(newConfig);
+	    setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
+	}
 }

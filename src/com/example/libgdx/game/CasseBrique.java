@@ -8,6 +8,8 @@ import com.badlogic.gdx.graphics.Texture;
 import com.example.libgdx.model.Balle;
 import com.example.libgdx.model.Barre;
 import com.example.libgdx.model.Brique;
+import com.example.libgdx.model.Collision;
+import com.example.libgdx.model.CollisionType;
 import com.example.libgdx.model.Image;
 
 public class CasseBrique {
@@ -39,11 +41,11 @@ public class CasseBrique {
 	private boolean gameOverFirstUse = true;
 	private boolean isGameOver = false;
 
-	private int margeBrique = 5 ;
+	private int margeBrique = 150 ;
 	private int nbrCols;
-	private int nbrBrique = 90;
+	private int nbrBrique = 15;
 	
-	private float initialSpeed = 10;
+	private float initialSpeed = 8;
 	private float xBalleCoefDeplacementTemp = initialSpeed;
 	private float yBalleCoefDeplacementTemp = initialSpeed;
 
@@ -76,7 +78,7 @@ public class CasseBrique {
 			
 			Brique brique = new Brique(briqueTexture);
 			brique.setY(margeBrique + ((i % nbrCols) * (brique.getHeight() + margeBrique)));
-			brique.setX(currentCols * (brique.getHeight() + margeBrique));
+			brique.setX(currentCols * (brique.getWidth() + margeBrique));
 
 			listImageBrique.add(brique);
 		}
@@ -85,37 +87,13 @@ public class CasseBrique {
 		this.getImageBackground().setY(0);
 	}
 
-	public boolean isBalleFail() {
-		if (this.getBalle().getX() + this.getBalle().getHeight() >= this.getW()) {
-			return true;
-		}
-		 
-		return false;
-	}
-	
-	public boolean isBalleHitBarre() {
-
-//		System.out.println("Up " + this.getBalle().isCollisionUp(this.getBarre()));
-//		System.out.println("Down " + this.getBalle().isCollisionDown(this.getBarre()));
-//		System.out.println("Left " + this.getBalle().isCollisionLeft(this.getBarre()));
-//		System.out.println("Right " + this.getBalle().isCollisionRight(this.getBarre()));
-		
-//		if (this.getW() - (this.getBalle().getWidth() + this.getMarge()) < this.getBalle().getX()) {
-			if (this.getBalle().isCollision(this.getBarre())) {
-				return true;
-			}
-//		}
-		
-		return false;
-	}
-
 	public void renderGame() {
 		listImage = new ArrayList<Image>();
 		listSound = new ArrayList<Sound>();
 		
 		listImage.add(this.getImageBackground());
 		
-		if (this.isGameOver() || this.isBalleFail()) {
+		if (this.isGameOver() || this.getBalle().isBalleFail(this.getW())) {
 			this.setGameOver(true);
 		}
 		
@@ -142,30 +120,75 @@ public class CasseBrique {
 		}
 
 		boolean isStillBalle = false;
-		boolean isHitBrique = false;
+		boolean isHitBriqueX = false;
+		boolean isHitBriqueY = false;
 		for (Brique brique : listImageBrique) {
 			if (brique.isVisible()) {
 				isStillBalle = true;
-				boolean isCollision = balle.isCollision(brique);
-				if (isCollision) {
+				
+				Collision collision = new Collision(balle, brique);
+				
+				if (collision.isCollision()) {
 					brique.setVisible(false);
-					isHitBrique = true;
+
+					if (collision.getCollisionTypeH() != null) {
+						if (collision.getCollisionTypeH().equals(CollisionType.Left)) {
+							this.getBalle().setxBalleCoefDeplacement(-1
+									* this.getBalle().getxBalleCoefDeplacement());
+						} else {
+							this.getBalle().setxBalleCoefDeplacement(1
+									* this.getBalle().getxBalleCoefDeplacement());
+						}
+						listSound.add(this.getSoundClash());
+					}
+					
+					if (collision.getCollisionTypeV() != null) {
+						if (collision.getCollisionTypeV().equals(CollisionType.Up)) {
+							this.getBalle().setyBalleCoefDeplacement(1
+									* this.getBalle().getyBalleCoefDeplacement());
+						} else {
+							this.getBalle().setyBalleCoefDeplacement(-1
+									* this.getBalle().getyBalleCoefDeplacement());
+						}
+						listSound.add(this.getSoundClash());
+					}
 				} else {
 					listImage.add(brique);
 				}
+				
+//				if (balle.isCollisionRight(brique)) {
+//					brique.setVisible(false);
+//					isHitBriqueY = true;
+//				} else if (balle.isCollisionDown(brique)) {
+//					brique.setVisible(false);
+//					isHitBriqueX = true;
+//				} else if (balle.isCollisionUp(brique)) {
+//					brique.setVisible(false);
+//					isHitBriqueY = true;
+//				} else if (balle.isCollisionLeft(brique)) {
+//					brique.setVisible(false);
+//					isHitBriqueX = true;
+//				} else {
+//					listImage.add(brique);
+//				}
 			}
 		}
 		
-		
-		if (isHitBrique) {
-			this.getBalle().setxBalleCoefDeplacement(-1
-					* this.getBalle().getxBalleCoefDeplacement());
-			listSound.add(this.getSoundClash());
-		}
-		
-		if (!isStillBalle) {
-			this.setGameOver(true);
-		}
+
+//		if (isHitBriqueX) {
+//			this.getBalle().setxBalleCoefDeplacement(-1
+//					* this.getBalle().getxBalleCoefDeplacement());
+//			listSound.add(this.getSoundClash());
+//		} else 
+//		if (isHitBriqueY) {
+//			this.getBalle().setyBalleCoefDeplacement(-1
+//					* this.getBalle().getyBalleCoefDeplacement());
+//			listSound.add(this.getSoundClash());
+//		}
+//		
+////		if (!isStillBalle) {
+////			this.setGameOver(true);
+////		}
 
 		listImage.add(this.getBarre()); // #17
 		listImage.add(this.getBalle()); // #17
